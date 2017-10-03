@@ -5,7 +5,7 @@
 const http = require("http");
 const port = 3000;
 const router = require('./router.js')
-const display = require('./display.js');
+
 
 const server = http.createServer((request, response) => {
   router.home(request, response);
@@ -20,7 +20,6 @@ server.listen(port,(err) => {
   console.log(`server is listening on port ${port}`)
 })
 
-display.get()
 
 
 
