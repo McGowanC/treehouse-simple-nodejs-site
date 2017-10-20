@@ -19,22 +19,3 @@ server.listen(port,(err) => {
 
   console.log(`server is listening on port ${port}`)
 })
-
-
-
-
-//Handle HTTP route GET / and POST /
-  //if url == "/" && get
-      //show search
-
-    //if url == "/" && POST
-      //redirect to /:username
-
-
-//3. Handle HTTP route GET /:username i.e. /chalkers
-  //if url == "/....."
-    //get json from teamtreehouse
-      //on "end"
-        //show profile
-      //on "error"
-        //show error

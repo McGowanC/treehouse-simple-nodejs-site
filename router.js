@@ -1,27 +1,36 @@
 const Profile = require("./profile.js");
-
+const renderer = require("./renderer.js");
+const queryString = require("querystring");
+const contentType = "text/html"
 
 function homePath(request,response) {
   if(request.url === "/") {
-    response.write("<HTML>");
-    response.write("<body>");
-    response.write("<h1>")
-    response.write("This is it baby")
-    response.write("</h1>");
-    response.write("</body>")
-    response.write("</html>")
-    response.end('Hello Node.js Server!');
+    if(request.method.toLowerCase() === "get"){
+    response.writeHead(200, {'Content-Type': contentType})
+    renderer.view('header', {}, response);
+    renderer.view('search', {}, response);
+    renderer.view('footer', {}, response);
+    response.end();
+  } else {
+    //if url =="/" && POST
+
+    //get the post data from body
+    request.on('data',(postBody) => {
+      let query = queryString.parse(postBody.toString());
+      response.writeHead(303,{'Location':"/" + query.username});
+      response.end();
+    })
+
+    //redirect to user name
+  }
   }
 }
 
 function userPath(request, response) {
   let userName = request.url.replace("/","");
   if(userName.length > 0) {
-    response.write("<HTML>");
-    response.write("<body>");
-    response.write("<h1>")
-    response.write(`Hello ${userName}`)
-    response.write("</h1>");
+    response.writeHead(200, {'Content-Type': contentType});
+    renderer.view('header', {}, response);
 
     //get json from teamtreehouse
 
@@ -39,20 +48,18 @@ function userPath(request, response) {
       }
 
       //simple response
-      response.write("The user " + values.name1 + " has " + values.badges + " badges, as well as " + values.jsPoints + " JavaScript points.\n")
-      response.end("this is the end")
+      renderer.view('profile', values, response);
+      renderer.view('footer', {}, response);
 
 
     })
     //on error
     studentProfile.on("error", function(error){
       //show error
-      response.write(error.message + "\n");
-      response.end("footer\n")
+      renderer.view('error', {errorMessage: error.message}, response);
+      renderer.view('search', {}, response);
+      renderer.view('footer', {}, response);
     })
-
-    response.write("</body>")
-    response.write("</html>")
   }
 }
 
